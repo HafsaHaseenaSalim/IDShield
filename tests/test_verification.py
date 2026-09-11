@@ -16,7 +16,15 @@ def client():
 
 
 def create_challenge(handle):
-    response = handle.post("/api/verify", data=verification_data(liveness="fail", email="test@mailinator.com", phone="+447700900123"))
+    # Failed liveness + a disposable email domain + a phone whose country
+    # doesn't match the declared UAE residence: three independent weak
+    # signals combining into the STEP_UP band. The address must name a
+    # country for the phone/residence check to fire at all (see
+    # fraud_engine.py's PHONE_RESIDENCE_MISMATCH) - "12 Test Street" alone
+    # does not, so UAE is spelled out here on purpose.
+    response = handle.post("/api/verify", data=verification_data(
+        liveness="fail", email="test@mailinator.com", phone="+447700900123",
+        address="12 Test Street, UAE"))
     assert response.status_code == 200, response.get_json()
     assert response.get_json()["decision"] == "STEP_UP"
     return response.get_json()["attempt_ref"]

@@ -134,7 +134,16 @@ class UploadRejected(Exception):
 
 
 def validate_verification(form, upload):
-    """Validate at the boundary, before files, graph, or database are changed."""
+    """
+    Validate at the boundary, before files, graph, or database are changed.
+
+    The caller (app.py's /api/verify) must check this BEFORE opening a
+    database connection or calling FraudEngine: a required field that is
+    missing, or present but whitespace-only, must never reach scoring, never
+    create an attempt row, and never produce a decision or an activation
+    token. `.strip()` on every field below is what makes "   " count as
+    missing, not just "".
+    """
     errors = {}
     limits = {"full_name": 150, "date_of_birth": 10, "nationality": 80,
               "phone": 16, "email": 254, "address": 300,

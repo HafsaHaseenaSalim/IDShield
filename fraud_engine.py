@@ -22,6 +22,7 @@ quietly wave through something a deterministic control has already caught.
 """
 
 import difflib
+import re
 from datetime import datetime, timezone
 
 import config
@@ -231,16 +232,26 @@ class FraudEngine:
                 config.POINTS["IMPLAUSIBLE_AGE"],
             ))
 
+        # Nationality is not a residence, and a phone number is not proof of
+        # either - an Indian national living in the UAE on a UAE number (or
+        # keeping an Indian one) is completely ordinary. So this compares the
+        # phone's country code against the DECLARED RESIDENTIAL ADDRESS
+        # instead of nationality, and only when the address actually names a
+        # country. A street/city address usually does not, in which case
+        # there is nothing to compare and the check is silent rather than
+        # guessed - it is a weak, low-weight signal on the rare occasions it
+        # does fire, never a determination about where someone is really
+        # from.
         phone = (attempt.get("phone") or "").strip()
-        nationality = attempt.get("nationality")
-        expected_prefix = config.NATIONALITY_PHONE_PREFIX.get(nationality)
+        residence_country = self._address_country(attempt.get("address"))
+        expected_prefix = (config.NATIONALITY_PHONE_PREFIX.get(residence_country)
+                          if residence_country else None)
         if phone and expected_prefix and not phone.startswith(expected_prefix):
             flags += 1
             reasons.append(Reason(
-                "PHONE_NATIONALITY_MISMATCH",
-                "Phone country code does not match stated nationality (%s)"
-                % nationality,
-                config.POINTS["PHONE_NATIONALITY_MISMATCH"],
+                "PHONE_RESIDENCE_MISMATCH",
+                "Phone country differs from declared residence (%s)" % residence_country,
+                config.POINTS["PHONE_RESIDENCE_MISMATCH"],
             ))
 
         email = (attempt.get("email") or "").lower()
@@ -477,6 +488,25 @@ class FraudEngine:
                 score = max(score, floor)
 
         return int(max(0, min(100, round(score))))
+
+    @staticmethod
+    def _address_country(address):
+        """
+        Best-effort country hint from the free-text residential address
+        field, by looking for one of the known country names as a whole
+        word.
+
+        Returns None when no country is named, which is the common case - a
+        street/city address rarely spells one out - and the phone/residence
+        check above simply does not fire on a miss. This is deliberately not
+        geocoding: a name that is not found is silence, not a guess.
+        """
+        if not address:
+            return None
+        for country in config.NATIONALITY_PHONE_PREFIX:
+            if re.search(r"\b%s\b" % re.escape(country), address, re.IGNORECASE):
+                return country
+        return None
 
     @staticmethod
     def _age_from_dob(date_of_birth, timestamp=None):

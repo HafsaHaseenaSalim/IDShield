@@ -625,7 +625,17 @@ def api_stats():
             " GROUP BY scenario, decision"
         ).fetchall()
         stats["breakdown"] = [dict(row) for row in by_scenario]
-        stats["score_histogram"] = db.get_score_histogram(conn)
+        # The histogram respects the same decision/scenario filters as
+        # /api/attempts, so it visibly changes when the analyst changes the
+        # filter controls above it instead of always showing every attempt.
+        # The four summary cards above it stay unfiltered on purpose (see
+        # the "Summary totals cover all attempts" caption already shown
+        # next to the attempts table).
+        stats["score_histogram"] = db.get_score_histogram(
+            conn,
+            decision=request.args.get("decision") or None,
+            scenario=request.args.get("scenario") or None,
+        )
         return jsonify(stats)
     finally:
         conn.close()

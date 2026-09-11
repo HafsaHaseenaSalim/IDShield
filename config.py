@@ -82,7 +82,7 @@ POINTS = {
 
     # -- attribute plausibility / synthetic identity -----------------------
     "IMPLAUSIBLE_AGE": 15,
-    "PHONE_NATIONALITY_MISMATCH": 10,
+    "PHONE_RESIDENCE_MISMATCH": 10,  # weak on its own: legitimate residents keep foreign numbers
     "DISPOSABLE_EMAIL": 10,
     "NAME_MISMATCH_DOCUMENT": 15,
     "SEQUENTIAL_CONTACT_PATTERN": 12,  # e.g. phone numbers differing by 1 digit
@@ -175,9 +175,12 @@ DISPOSABLE_EMAIL_DOMAINS = {
     "throwaway.email", "yopmail.com", "trashmail.com", "sharklasers.com",
 }
 
-# Very small illustrative mapping. A production system would use a proper
-# phone-number library (libphonenumber); this is deliberately simplified and
-# labelled as such so it is not mistaken for real coverage.
+# Country name -> expected international dialling prefix. Very small,
+# illustrative mapping; a production system would use a proper phone-number
+# library (libphonenumber). Despite the name, fraud_engine.py looks this up
+# by DECLARED RESIDENCE (parsed from the free-text address), not by
+# nationality - the name is kept because the simulator also uses this table
+# to generate a nationality-plausible phone number for its synthetic traffic.
 NATIONALITY_PHONE_PREFIX = {
     "UAE": "+971",
     "India": "+91",

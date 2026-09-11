@@ -140,8 +140,13 @@ def test_block_decision_cannot_activate_account():
 # ---------------------------------------------------------------------------
 
 def _step_up_data(**overrides):
+    # Address names a country so the phone/residence weak signal has
+    # something to compare against (see PHONE_RESIDENCE_MISMATCH in
+    # fraud_engine.py) - without it, only the failed liveness and disposable
+    # email fire, which is not enough on its own to reach STEP_UP.
     return verification_data(liveness="fail", email="test@mailinator.com",
-                             phone="+447700900123", **overrides)
+                             phone="+447700900123", address="12 Test Street, UAE",
+                             **overrides)
 
 
 def test_pending_step_up_cannot_activate_account():

@@ -744,7 +744,11 @@ function initDashboard() {
 
   async function loadStats() {
     try {
-      const stats = await getJSON("/api/stats");
+      const filters = new URLSearchParams({
+        decision: document.getElementById("filter-decision").value,
+        scenario: document.getElementById("filter-scenario").value,
+      });
+      const stats = await getJSON("/api/stats?" + filters.toString());
       clear(statsBox);
       [["Total attempts", stats.total, ""],
        ["Allowed", stats.allowed, "ALLOW"],
@@ -764,8 +768,11 @@ function initDashboard() {
       const histBox = document.getElementById("histogram");
       clear(histBox);
       if (stats.score_histogram && stats.score_histogram.length) {
+        const isFiltered = filters.get("decision") || filters.get("scenario");
         histBox.appendChild(el("h3", null, "Original risk score distribution"));
-        histBox.appendChild(el("p", "muted small", "All attempts. Scores stay unchanged when a step-up is resolved; outcome totals show the current state."));
+        histBox.appendChild(el("p", "muted small",
+          (isFiltered ? "Matching the current filter." : "All attempts.")
+          + " Scores stay unchanged when a step-up is resolved; outcome totals above show the current state."));
         renderScoreHistogram(histBox, stats.score_histogram);
       }
     } catch (err) {
@@ -969,8 +976,39 @@ function initDashboard() {
       const controls = results[1];
       clear(metricsBox);
 
-      metricsBox.appendChild(el("h3", null, "Independent synthetic evaluation"));
       if (metrics.accuracy != null) {
+        // Two genuinely different kinds of measurement, kept visually and
+        // structurally separate so a correctly-classified attack is never
+        // read as "therefore blocked": decision outcomes come from
+        // FraudEngine's actual ALLOW/STEP_UP/BLOCK action, while the
+        // classifier table below measures whether the model predicted the
+        // right attack TYPE. Both are computed over the same held-out
+        // synthetic evaluation set (see the methodology note).
+        metricsBox.appendChild(el("h3", null, "End-to-End Fraud Decision Outcomes"));
+        metricsBox.appendChild(el("p", "muted small",
+          "What FraudEngine actually did with each held-out attempt - challenged or blocked it, or let it through."));
+        if (metrics.engine) {
+          const rates = el("div", "metric-row");
+          [["Attack attempts challenged or blocked", metrics.engine.attack_detection_rate],
+           ["Legitimate blocked", metrics.engine.legitimate_block_rate],
+           ["Legitimate challenged", metrics.engine.legitimate_step_up_rate]].forEach(function (pair) {
+            const item = el("div", "metric");
+            item.appendChild(el("span", null, pair[0]));
+            item.appendChild(el("strong", null, pair[1] == null ? "Unavailable" : (pair[1] * 100).toFixed(1) + "%"));
+            rates.appendChild(item);
+          });
+          metricsBox.appendChild(rates);
+        }
+
+        metricsBox.appendChild(el("p", "notice small",
+          "Classifier metrics measure attack-type prediction. Decision metrics measure "
+          + "whether the FraudEngine challenged or blocked the attempt. A correctly "
+          + "classified attack is not automatically BLOCKED - see the decision outcomes above."));
+
+        metricsBox.appendChild(el("h3", null, "Attack-Type Classifier — Held-Out Evaluation"));
+        metricsBox.appendChild(el("p", "muted small",
+          "Held-out synthetic evaluation set: a separate replay (different seed, documents "
+          + "and identities) the model never trained on."));
         const headline = el("div", "metric-row");
         [["Held-out accuracy", (metrics.accuracy * 100).toFixed(1) + "%"],
          ["Fraud vs legitimate AUC", metrics.fraud_vs_legitimate_auc == null ? "Unavailable" : metrics.fraud_vs_legitimate_auc.toFixed(3)],
@@ -983,19 +1021,6 @@ function initDashboard() {
           });
         metricsBox.appendChild(headline);
         metricsBox.appendChild(el("p", "muted small", metrics.methodology || ""));
-        if (metrics.engine) {
-          const rates = el("div", "metric-row");
-          [["Attacks challenged or blocked", metrics.engine.attack_detection_rate],
-           ["Legitimate blocked", metrics.engine.legitimate_block_rate],
-           ["Legitimate challenged", metrics.engine.legitimate_step_up_rate]].forEach(function (pair) {
-            const item = el("div", "metric");
-            item.appendChild(el("span", null, pair[0]));
-            item.appendChild(el("strong", null, pair[1] == null ? "Unavailable" : (pair[1] * 100).toFixed(1) + "%"));
-            rates.appendChild(item);
-          });
-          metricsBox.appendChild(el("h3", null, "Engine outcomes on the evaluation replay"));
-          metricsBox.appendChild(rates);
-        }
 
         const table = el("table", "matrix");
         const header = el("tr");
@@ -1054,7 +1079,13 @@ function initDashboard() {
   });
 
   ["filter-decision", "filter-scenario"].forEach(function (id) {
-    document.getElementById(id).addEventListener("change", loadAttempts);
+    // Both the attempts table AND the risk-score histogram are scoped to
+    // these filters, so both have to refresh on every change - previously
+    // only the table did, which is why the graph looked stuck on "All".
+    document.getElementById(id).addEventListener("change", function () {
+      loadStats();
+      loadAttempts();
+    });
   });
 
   const refresh = document.getElementById("refresh");

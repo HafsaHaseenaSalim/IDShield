@@ -513,7 +513,7 @@ def get_stats(conn):
     }
 
 
-def get_score_histogram(conn, bucket=10):
+def get_score_histogram(conn, bucket=10, decision=None, scenario=None):
     """
     Risk scores in buckets of ten, tagged with the band each bucket falls in.
 
@@ -521,12 +521,23 @@ def get_score_histogram(conn, bucket=10):
     system has a tall pile near zero and a thin tail, and a policy change that
     quietly drags the middle of the distribution upward is visible here long
     before it shows up as a complaint about false positives.
+
+    `decision`/`scenario` mirror get_attempts()'s filters, so the histogram
+    can be scoped to the same subset the analyst has filtered the attempts
+    table to, instead of always describing every attempt regardless of the
+    filter controls next to it.
     """
-    rows = conn.execute(
-        "SELECT MIN(CAST(risk_score / ? AS INTEGER), ?) AS b, COUNT(*) AS c"
-        " FROM attempts GROUP BY b ORDER BY b",
-        (bucket, (100 // bucket) - 1),
-    ).fetchall()
+    query = ("SELECT MIN(CAST(risk_score / ? AS INTEGER), ?) AS b, COUNT(*) AS c"
+            " FROM attempts WHERE 1=1")
+    params = [bucket, (100 // bucket) - 1]
+    if decision:
+        query += " AND decision = ?"
+        params.append(decision)
+    if scenario:
+        query += " AND scenario = ?"
+        params.append(scenario)
+    query += " GROUP BY b ORDER BY b"
+    rows = conn.execute(query, params).fetchall()
     counts = {row["b"]: row["c"] for row in rows}
 
     histogram = []

@@ -348,7 +348,11 @@ def test_malformed_requests_do_not_return_stack_traces():
 
 def test_step_up_rejects_wrong_and_missing_codes():
     handle = client()
-    created = handle.post("/api/verify", data=verification_data(liveness="fail", email="test@mailinator.com", phone="+447700900123")).get_json()
+    # Address names a country so the phone/residence check has something to
+    # compare against - see PHONE_RESIDENCE_MISMATCH in fraud_engine.py.
+    created = handle.post("/api/verify", data=verification_data(
+        liveness="fail", email="test@mailinator.com", phone="+447700900123",
+        address="12 Test Street, UAE")).get_json()
     assert created["decision"] == "STEP_UP"
 
     assert handle.post("/api/step-up", json={

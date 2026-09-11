@@ -147,14 +147,46 @@ def train(conn, seed=None, verbose=True):
     return model, metadata
 
 
+def metrics_from_confusion(matrix, labels):
+    """
+    Per-class precision/recall/F1/support computed directly from a confusion
+    matrix, so the numbers displayed alongside it are reconstructible from
+    that SAME matrix rather than trusting a separately-computed report to
+    agree with it - one canonical source instead of two calculations that
+    could silently drift apart.
+
+    matrix[i][j] = count of actual-label[i] predicted as label[j] (the same
+    row-major layout sklearn.metrics.confusion_matrix(labels=labels)
+    produces, and the same one the dashboard's confusion-matrix table
+    renders). zero_division matches sklearn's zero_division=0 convention:
+    an undefined ratio (nothing predicted, or nothing actually of that
+    class in this evaluation set) reports as 0.0, not a crash.
+    """
+    n = len(labels)
+    per_class = {}
+    for i, label in enumerate(labels):
+        tp = matrix[i][i]
+        support = sum(matrix[i])                              # actual total for this class (row sum)
+        predicted_total = sum(matrix[r][i] for r in range(n))  # predicted total for this class (column sum)
+        fp = predicted_total - tp
+        fn = support - tp
+        precision = tp / (tp + fp) if (tp + fp) else 0.0
+        recall = tp / (tp + fn) if (tp + fn) else 0.0
+        f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0.0
+        per_class[label] = {
+            "precision": precision, "recall": recall, "f1": f1, "support": support,
+        }
+    return per_class
+
+
 def evaluate(model, conn, training_metadata, evaluation_seed):
     """Report classifier metrics and actual engine decisions on unseen traffic."""
-    from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
+    from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
     X, y = build_dataset(conn)
     predictions = model.estimator.predict(X)
     probabilities = model.estimator.predict_proba(X)
     labels = list(model.estimator.classes_)
-    report = classification_report(y, predictions, output_dict=True, zero_division=0)
+    matrix = confusion_matrix(y, predictions, labels=labels).tolist()
     truth = (y != "LEGITIMATE").astype(int)
     auc = None
     if "LEGITIMATE" in labels and len(np.unique(truth)) == 2:
@@ -171,11 +203,10 @@ def evaluate(model, conn, training_metadata, evaluation_seed):
         **training_metadata, "n_test": len(X), "n_total": training_metadata["n_train"] + len(X),
         "evaluation_seed": evaluation_seed, "accuracy": float(accuracy_score(y, predictions)),
         "fraud_vs_legitimate_auc": auc, "labels": labels,
-        "confusion_matrix": confusion_matrix(y, predictions, labels=labels).tolist(),
-        "per_class": {label: {"precision": report.get(label, {}).get("precision"),
-                              "recall": report.get(label, {}).get("recall"),
-                              "f1": report.get(label, {}).get("f1-score"),
-                              "support": report.get(label, {}).get("support")} for label in labels},
+        "confusion_matrix": matrix,
+        # Derived from THIS SAME confusion matrix (see metrics_from_confusion
+        # above), not a separately-computed report.
+        "per_class": metrics_from_confusion(matrix, labels),
         "feature_importances": dict(zip(model.feature_names, map(float, model.estimator.feature_importances_))),
         "engine": {"breakdown": breakdown,
                    "legitimate_block_rate": blocked / legitimate if legitimate else None,
