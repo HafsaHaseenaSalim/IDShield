@@ -70,7 +70,7 @@ def test_new_citizen_can_complete_verification_and_activate_account():
         "confirm_password": "CorrectHorse9!",
     })
     assert response.status_code == 302
-    assert response.headers.get("Location", "").endswith("/verify")
+    assert response.headers.get("Location", "").endswith("/customer/profile")
     session = session_of(handle)
     assert session.get("role") == "customer"
     assert session.get("user_ref") == "NEWCIT-001"
@@ -97,7 +97,7 @@ def test_activated_citizen_can_later_log_in():
     response = fresh.post("/customer/login", data={
         "identifier": "later.login@example.com", "password": "AnotherPass8!"})
     assert response.status_code == 302
-    assert response.headers.get("Location", "").endswith("/verify")
+    assert response.headers.get("Location", "").endswith("/customer/profile")
     assert session_of(fresh).get("role") == "customer"
 
 

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block page %}customer-profile{% endblock %}
+{% block title %}IDShield &mdash; My Profile{% endblock %}
+{% block content %}
+<h1>Welcome, {{ user["full_name"] }}</h1>
+<p class="lede">Your verified Digital ID profile.</p>
+
+<div class="panel profile-panel">
+  <div class="row-between">
+    <div>
+      <h3>Profile information</h3>
+      <p class="muted small">Digital ID: <strong>{{ user["user_ref"] }}</strong></p>
+    </div>
+    <span class="pill ALLOW">Verified</span>
+  </div>
+  <div class="grid2">
+    <div><span class="muted small">Email</span><p>{{ user["email"] }}</p></div>
+    <div><span class="muted small">Phone</span><p>{{ user["phone"] }}</p></div>
+    <div><span class="muted small">Date of birth</span><p>{{ user["date_of_birth"] }}</p></div>
+    <div><span class="muted small">Nationality</span><p>{{ user["nationality"] }}</p></div>
+    <div><span class="muted small">Address</span><p>{{ user["address"] }}</p></div>
+  </div>
+  <form method="post" action="{{ url_for('logout') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+    <button class="btn ghost" type="submit">Sign Out</button>
+  </form>
+</div>
+{% endblock %}

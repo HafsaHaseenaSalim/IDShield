@@ -43,7 +43,7 @@ def test_customer_valid_login_succeeds():
     response = handle.post("/customer/login", data={
         "identifier": config.CUSTOMER_DEMO_EMAIL, "password": config.CUSTOMER_DEMO_PASSWORD})
     assert response.status_code == 302
-    assert response.headers.get("Location", "").endswith("/verify")
+    assert response.headers.get("Location", "").endswith("/customer/profile")
     session = session_of(handle)
     assert session.get("role") == "customer"
     assert session.get("user_ref") == "DEMO-CITIZEN"
@@ -155,6 +155,33 @@ def test_customer_failed_step_up_does_not_authenticate():
     result = handle.post("/api/step-up", json={"attempt_ref": attempt_ref, "code": "000000"}).get_json()
     assert result == {"passed": False, "decision": "BLOCK", "activation_available": False}
     assert "role" not in session_of(handle)
+
+
+def test_analyst_can_resolve_customer_login_step_up():
+    conn = db.get_db()
+    db.flag_ip(conn, "127.0.0.1", "test setup")
+    db.flag_device(conn, "WEB-DEVICE", "test setup")
+    conn.close()
+
+    customer = client()
+    customer.post("/customer/login", data={
+        "identifier": config.CUSTOMER_DEMO_EMAIL,
+        "password": config.CUSTOMER_DEMO_PASSWORD,
+    })
+    conn = db.get_db()
+    attempt_ref = conn.execute(
+        "SELECT attempt_ref FROM attempts WHERE claimed_user_ref='DEMO-CITIZEN'"
+        " ORDER BY id DESC LIMIT 1").fetchone()["attempt_ref"]
+    conn.close()
+
+    analyst = employee_client()
+    detail = analyst.get("/api/attempt/" + attempt_ref).get_json()
+    assert detail["attempt"]["stage"] == config.STAGE_LOGIN
+    result = analyst.post("/api/analyst/step-up", json={
+        "attempt_ref": attempt_ref, "code": "123456"}).get_json()
+    assert result == {"passed": True, "decision": config.DECISION_ALLOW}
+    assert session_of(analyst).get("role") == "employee"
+    assert "role" not in session_of(customer)
 
 
 def test_customer_expired_step_up_cannot_authenticate():

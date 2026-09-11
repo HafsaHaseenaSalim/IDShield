@@ -122,6 +122,24 @@ def verify():
     return render_template("verify.html")
 
 
+@app.route("/customer/profile")
+def customer_profile():
+    if session.get("role") != "customer" or not session.get("user_id"):
+        return redirect(url_for("customer_login"))
+
+    conn = db.get_db()
+    try:
+        user = conn.execute("SELECT * FROM users WHERE id = ?",
+                            (session["user_id"],)).fetchone()
+    finally:
+        conn.close()
+
+    if not user:
+        session.clear()
+        return redirect(url_for("customer_login"))
+    return render_template("customer_profile.html", user=user)
+
+
 @app.route("/simulator")
 @security.login_required
 def simulator_page():
@@ -215,7 +233,7 @@ def customer_login():
                     session["user_id"] = user["id"]
                     session["role"] = "customer"
                     session["user_ref"] = user["user_ref"]
-                    return redirect(url_for("verify"))
+                    return redirect(url_for("customer_profile"))
             finally:
                 conn.close()
     return render_template("customer_login.html", error=error,
@@ -251,7 +269,7 @@ def analyst_login():
     return render_template(template, error=error, demo_user=config.ANALYST_USERNAME)
 
 
-@app.route("/logout", methods=["GET"])
+@app.route("/logout", methods=["GET", "POST"])
 @app.route("/employee/logout", methods=["POST"])
 @app.route("/customer/logout", methods=["POST"])
 def logout():
@@ -358,7 +376,7 @@ def customer_activate():
     session["user_id"] = user_id
     session["role"] = "customer"
     session["user_ref"] = user_ref
-    return redirect(url_for("verify"))
+    return redirect(url_for("customer_profile"))
 
 
 # ---------------------------------------------------------------------------
@@ -557,6 +575,59 @@ def api_step_up():
         conn.close()
 
 
+@app.route("/api/analyst/step-up", methods=["POST"])
+@security.login_required
+@rate_limit(config.RATE_LIMIT_LOGIN)
+def api_analyst_step_up():
+    """Resolve a pending customer login challenge from the analyst console."""
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "A JSON object is required."}), 400
+    attempt_ref = payload.get("attempt_ref")
+    code = payload.get("code")
+    if (not isinstance(attempt_ref, str) or not isinstance(code, str)
+            or len(code) != 6 or not code.isascii() or not code.isdigit()):
+        return jsonify({"error": "An attempt reference and a six-digit code are required."}), 400
+
+    conn = db.get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        attempt = db.get_attempt(conn, attempt_ref)
+        challenge = conn.execute(
+            "SELECT * FROM step_up_challenges WHERE attempt_id=?",
+            (attempt["id"] if attempt else None,)).fetchone()
+        if (not attempt or attempt["stage"] != config.STAGE_LOGIN
+                or not attempt["user_id"] or not challenge):
+            conn.rollback()
+            return jsonify({"error": "Customer login challenge not found."}), 404
+        if challenge["consumed"] or attempt["decision"] != config.DECISION_STEP_UP:
+            conn.rollback()
+            return jsonify({"error": "This challenge has already been resolved."}), 409
+        if challenge["expires_at"] <= db.utcnow():
+            conn.rollback()
+            return jsonify({"error": "This challenge has expired."}), 410
+
+        passed = secrets.compare_digest(code, "123456")
+        outcome = config.DECISION_ALLOW if passed else config.DECISION_BLOCK
+        conn.execute(
+            "UPDATE attempts SET step_up_result = ?, decision = ? WHERE id = ?",
+            ("PASS" if passed else "FAIL", outcome, attempt["id"]),
+        )
+        conn.execute("UPDATE step_up_challenges SET consumed=1 WHERE attempt_id=?",
+                     (attempt["id"],))
+        db.log_event(conn, "ANALYST_STEP_UP_%s" % ("PASSED" if passed else "FAILED"),
+                     attempt["id"], "employee_ref=%s" % session.get("employee_ref"),
+                     commit=False)
+        conn.commit()
+
+        resolved = dict(attempt)
+        resolved["decision"] = outcome
+        apply_post_decision_reputation(conn, get_graph(), resolved)
+        return jsonify({"passed": passed, "decision": outcome})
+    finally:
+        conn.close()
+
+
 # ---------------------------------------------------------------------------
 # Simulator API
 # ---------------------------------------------------------------------------
@@ -718,6 +789,7 @@ def api_attempt(attempt_ref):
                 "ml_probability": row["ml_probability"],
                 "decision": row["decision"],
                 "initial_decision": row["initial_decision"],
+                "stage": row["stage"],
                 "step_up_result": row["step_up_result"],
                 "scenario": row["scenario"],
                 "document_status": row["document_status"],

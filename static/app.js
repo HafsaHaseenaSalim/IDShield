@@ -880,6 +880,47 @@ function initDashboard() {
           + humanise(attempt.decision) + ". The original score and reasons are preserved."));
       }
 
+      if (attempt.stage === "LOGIN" && attempt.decision === "STEP_UP") {
+        const stepUpPanel = el("div", "panel step-up-review");
+        stepUpPanel.appendChild(el("h3", null, "Analyst step-up review"));
+        stepUpPanel.appendChild(el("p", "muted small",
+          "Resolve this customer login challenge after reviewing the evidence above."));
+        const stepUpRow = el("div", "otp-row");
+        const code = el("input");
+        code.placeholder = "Enter code";
+        code.maxLength = 6;
+        code.inputMode = "numeric";
+        code.setAttribute("aria-label", "Step-up code");
+        const resolve = el("button", "btn", "Resolve step-up");
+        resolve.type = "button";
+        const output = el("div");
+        resolve.addEventListener("click", async function () {
+          resolve.disabled = true;
+          clear(output);
+          try {
+            const result = await getJSON("/api/analyst/step-up", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({attempt_ref: attempt.attempt_ref, code: code.value})
+            });
+            output.appendChild(el("p", result.passed ? "notice ok" : "notice error",
+              result.passed ? "Step-up approved. The customer login is allowed."
+                : "Step-up rejected. The customer login is blocked."));
+            if (result.passed || result.decision === "BLOCK") {
+              await loadDetail(attempt.attempt_ref);
+            }
+          } catch (err) {
+            output.appendChild(el("p", "notice error", err.message));
+            resolve.disabled = false;
+          }
+        });
+        stepUpRow.appendChild(code);
+        stepUpRow.appendChild(resolve);
+        stepUpPanel.appendChild(stepUpRow);
+        stepUpPanel.appendChild(output);
+        detail.appendChild(stepUpPanel);
+      }
+
       const kv = el("div", "kv");
       [["IP address", attempt.ip_address],
        ["Device", attempt.device_id],

@@ -1,30 +1,25 @@
 {% extends "base.html" %}
 {% block page %}home{% endblock %}
+{% block title %}IDShield &mdash; Digital Identity{% endblock %}
 {% block content %}
-<h1>Explainable fraud detection for digital identity</h1>
-<p class="lede">IDShield sits behind a digital ID verification flow and decides whether
-each onboarding or login attempt should be allowed, challenged, or blocked &mdash;
-and records exactly why.</p>
-
-{% if not model_trained %}
-<div class="notice">No trained model found. Run <code>python seed.py</code> to generate
-traffic and train one. The rule layer works without it.</div>
-{% endif %}
+<h1>Your digital identity, securely yours</h1>
+<p class="lede">Create your Digital ID with a quick identity check, then sign in to
+manage your profile.</p>
 
 <div class="cards">
   <div class="card">
     <h3>Citizen Portal</h3>
-    <p>Securely access or verify your digital identity.</p>
+    <p>New here? Verify your identity to create an account.</p>
     <div class="actions">
-      <a class="btn" href="/customer/login">Citizen Sign In</a>
-      <a class="btn ghost" href="/verify">Start Identity Verification</a>
+      <a class="btn" href="{{ url_for('verify') }}">Sign Up</a>
+      <a class="btn ghost" href="{{ url_for('customer_login') }}">Sign In</a>
     </div>
   </div>
   <div class="card">
     <h3>Employee Portal</h3>
     <p>Authorized fraud analysts and security personnel.</p>
     <div class="actions">
-      <a class="btn" href="/employee/login">Analyst Sign In</a>
+      <a class="btn" href="{{ url_for('analyst_login') }}">Analyst Sign In</a>
     </div>
   </div>
 </div>

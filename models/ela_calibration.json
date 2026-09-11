@@ -1,9 +1,9 @@
 {
-  "threshold": 8.5,
-  "balanced_accuracy": 0.8889,
-  "n_clean": 18,
-  "n_tampered": 6,
-  "clean_mean": 4.165,
-  "tampered_mean": 13.458,
+  "threshold": 6.0,
+  "balanced_accuracy": 0.9349,
+  "n_clean": 34,
+  "n_tampered": 14,
+  "clean_mean": 3.763,
+  "tampered_mean": 12.746,
   "note": "Fitted on the generated document pool. Error Level Analysis is an indicator, not proof of forgery: it is one input to a risk score with a step-up band, never a standalone verdict."
 }
