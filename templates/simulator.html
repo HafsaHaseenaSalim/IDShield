@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block page %}simulator{% endblock %}
+{% block title %}IDShield &mdash; Simulator{% endblock %}
+{% block content %}
+<h1>Fraud simulator</h1>
+<p class="lede">Each button generates traffic and pushes it through the same engine the
+verification flow uses. Scenario labels provide evaluation ground truth;
+the engine independently computes each score and outcome.</p>
+<p class="muted small">Each run adds traffic and remembers earlier activity. For a fresh demo,
+run <code>python seed.py</code>. The app reloads its state when the reset finishes.
+For credential stuffing, seed a population first or generate a legitimate citizen.</p>
+
+<div class="cards">
+  <button class="card sim" type="button" data-scenario="legitimate">
+    <h3>Legitimate citizen</h3>
+    <p>A normal onboarding: genuine document, fresh device, plausible attributes.</p></button>
+  <button class="card sim" type="button" data-scenario="stuffing">
+    <h3>Credential stuffing</h3>
+    <p>One IP and device firing stolen credentials at many accounts in seconds.</p></button>
+  <button class="card sim" type="button" data-scenario="synthetic">
+    <h3>Synthetic identity ring</h3>
+    <p>Several fabricated identities, each plausible alone, sharing infrastructure.</p></button>
+  <button class="card sim" type="button" data-scenario="forged">
+    <h3>Forged document</h3>
+    <p>An ordinary application with a tampered ID image.</p></button>
+</div>
+
+<div id="sim-output" class="panel hidden" aria-live="polite"></div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block page %}home{% endblock %}
+{% block content %}
+<h1>Explainable fraud detection for digital identity</h1>
+<p class="lede">IDShield sits behind a digital ID verification flow and decides whether
+each onboarding or login attempt should be allowed, challenged, or blocked &mdash;
+and records exactly why.</p>
+
+{% if not model_trained %}
+<div class="notice">No trained model found. Run <code>python seed.py</code> to generate
+traffic and train one. The rule layer works without it.</div>
+{% endif %}
+
+<div class="cards">
+  <div class="card">
+    <h3>Citizen Portal</h3>
+    <p>Securely access or verify your digital identity.</p>
+    <div class="actions">
+      <a class="btn" href="/customer/login">Citizen Sign In</a>
+      <a class="btn ghost" href="/verify">Start Identity Verification</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Employee Portal</h3>
+    <p>Authorized fraud analysts and security personnel.</p>
+    <div class="actions">
+      <a class="btn" href="/employee/login">Analyst Sign In</a>
+    </div>
+  </div>
+</div>
+
+<h2>How an attempt is scored</h2>
+<div class="pipeline">
+  <div class="stage-card"><span>1</span><h4>Verification API</h4>
+    <p>Document, liveness and credential checks.</p></div>
+  <div class="stage-card"><span>2</span><h4>Rule layer</h4>
+    <p>Velocity, reputation, attribute consistency, cross-record links,
+    document forensics.</p></div>
+  <div class="stage-card"><span>3</span><h4>Model layer</h4>
+    <p>A classifier over those same signals, validated on held-out data.</p></div>
+  <div class="stage-card"><span>4</span><h4>Decision</h4>
+    <p>One score, a full reason chain, and one of three outcomes.</p></div>
+</div>
+
+<div class="bands">
+  <div class="band ALLOW"><strong>ALLOW</strong><span>0&ndash;29</span>
+    <p>Proceed normally.</p></div>
+  <div class="band STEP_UP"><strong>STEP-UP</strong><span>30&ndash;69</span>
+    <p>Challenge before proceeding. Friction, not denial.</p></div>
+  <div class="band BLOCK"><strong>BLOCK</strong><span>70&ndash;100</span>
+    <p>Stop the attempt and record the evidence.</p></div>
+</div>
+{% endblock %}

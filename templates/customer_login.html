@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block page %}customer-login{% endblock %}
+{% block title %}IDShield &mdash; Secure Digital ID Sign-In{% endblock %}
+{% block content %}
+<h1>Secure Digital ID Sign-In</h1>
+<p class="lede">Access your digital identity securely. IDShield continuously evaluates
+authentication risk to protect your account.</p>
+{% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+
+{% if pending_step_up %}
+<div class="panel narrow" id="customer-stepup" data-attempt-ref="{{ pending_attempt_ref }}">
+  <h3>Step-up authentication required</h3>
+  <p>This sign-in scored in the middle risk band, so it is challenged rather than refused.
+  Use <code>123456</code> within five minutes, in this browser session.</p>
+  <div class="otp-row">
+    <input id="otp" placeholder="Enter code" maxlength="6" inputmode="numeric"
+           aria-label="One-time code">
+    <button id="otp-submit" class="btn" type="button">Verify code</button>
+  </div>
+  <div id="otp-result" aria-live="polite"></div>
+</div>
+{% else %}
+<form method="post" class="panel narrow">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+  <label>Email or Digital ID<input name="identifier" required autocomplete="username"></label>
+  <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+  <div class="actions">
+    <button class="btn" type="submit">Sign In Securely</button>
+    <a class="btn ghost" href="{{ url_for('verify') }}">Start Identity Verification</a>
+  </div>
+  <p class="muted small">Authentication attempts are monitored for unusual activity.</p>
+</form>
+{% endif %}
+{% endblock %}

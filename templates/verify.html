@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block page %}verify{% endblock %}
+{% block title %}IDShield &mdash; Verification{% endblock %}
+{% block content %}
+<h1>Identity verification</h1>
+<p class="lede">This is what a citizen applying for a digital identity would see.
+Everything submitted here is scored by the same engine the simulator uses.</p>
+
+<div id="stages" class="stages" aria-label="Verification progress"></div>
+
+<form id="verify-form" class="panel" enctype="multipart/form-data">
+  <h3>Identity details</h3>
+  <div class="grid2">
+    <label>Full name<input name="full_name" value="Sara Haddad" required></label>
+    <label>Date of birth<input type="date" name="date_of_birth" value="1994-05-11" required></label>
+    <label>Nationality
+      <select name="nationality">
+        <option>UAE</option><option>India</option><option>UK</option>
+        <option>Egypt</option><option>Philippines</option><option>Pakistan</option>
+      </select></label>
+    <label>Phone<input name="phone" value="+971501234567" required maxlength="16"></label>
+    <label>Email<input type="email" name="email" value="sara.haddad@gmail.com" required maxlength="254"></label>
+    <label>Address<input name="address" value="12 Falcon Street, Dubai" required maxlength="300"></label>
+    <label>Identity reference<input name="user_ref" placeholder="auto-generated if blank"></label>
+    <label>Device ID<input name="device_id" value="WEB-DEVICE-01" required maxlength="100"></label>
+  </div>
+
+  <h3>Identity document</h3>
+  <label class="file">Upload a JPG, PNG or PDF (max 5&nbsp;MB)
+    <input type="file" name="document" accept=".jpg,.jpeg,.png,.pdf" required></label>
+  <p class="muted small">PDFs: 1–20 pages, unencrypted. PDF analysis checks metadata;
+  compression heatmaps are available for images only.</p>
+  <p class="muted small">Try <code>demo_documents/genuine_id.jpg</code> and then
+  <code>demo_documents/forged_id.jpg</code>. The preview below is rendered locally &mdash;
+  nothing is uploaded until you submit.</p>
+  <div id="doc-preview" class="doc-preview hidden"></div>
+
+  <h3>Liveness and credentials</h3>
+  <div class="grid2">
+    <label>Liveness check (simulated)
+      <select name="liveness"><option value="pass">Pass</option><option value="fail">Fail</option></select></label>
+    <label>Password (simulated)<input type="password" name="password" value="demo-password" maxlength="256"></label>
+  </div>
+
+  <button type="submit" class="btn">Submit for verification</button>
+</form>
+
+<div id="result" class="panel hidden" aria-live="polite"></div>
+
+<div id="stepup" class="panel hidden">
+  <h3>Step-up authentication required</h3>
+  <p>The attempt scored in the middle band, so it is challenged rather than refused.
+  No message is sent in this simulation. Use <code>123456</code> within five minutes,
+  in this browser session. A wrong six-digit code resolves the attempt to block.</p>
+  <div class="otp-row">
+    <input id="otp" placeholder="Enter code" maxlength="6" inputmode="numeric"
+           aria-label="One-time code">
+    <button id="otp-submit" class="btn" type="button">Verify code</button>
+  </div>
+  <div id="otp-result" aria-live="polite"></div>
+</div>
+
+<div id="activate-prompt" class="panel hidden">
+  <h3>Identity verified</h3>
+  <p>Activate your Digital ID account to sign in next time with an email and password,
+  instead of verifying again.</p>
+  <a class="btn" href="{{ url_for('customer_activate') }}">Activate Account</a>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block page %}dashboard{% endblock %}
+{% block title %}IDShield &mdash; Analyst console{% endblock %}
+{% block content %}
+<div class="row-between">
+  <div><h1>Analyst console</h1>
+    <p class="muted small">Current outcomes and the evidence behind each original assessment.</p></div>
+  <div class="actions">
+    <button id="refresh" class="btn ghost" type="button">Refresh</button>
+    <a class="btn ghost" href="/api/export.csv">Export CSV</a>
+    <a class="btn ghost" href="/logout">Sign out</a>
+  </div>
+</div>
+
+<div id="stats" class="stats"></div>
+<div id="histogram" class="panel"></div>
+
+<div class="row-between">
+  <div class="filters">
+    <label class="inline">Current outcome
+      <select id="filter-decision"><option value="">All</option>
+        <option value="ALLOW">Allow</option><option value="STEP_UP">Step-up</option>
+        <option value="BLOCK">Block</option></select></label>
+    <label class="inline">Scenario
+      <select id="filter-scenario"><option value="">All</option>
+        <option value="LEGITIMATE">Legitimate</option>
+        <option value="CREDENTIAL_STUFFING">Credential stuffing</option>
+        <option value="SYNTHETIC_IDENTITY">Synthetic identity</option>
+        <option value="FORGED_DOCUMENT">Forged document</option>
+        <option value="UNKNOWN">Live (unlabelled)</option></select></label>
+  </div>
+  <button id="toggle-metrics" class="btn ghost" type="button">Model &amp; security controls</button>
+</div>
+
+<div id="metrics" class="panel hidden"></div>
+
+<div class="split">
+  <div class="panel scroll">
+    <p id="attempt-count" class="muted small">Loading recent attempts…</p>
+    <table id="attempts"><caption class="visually-hidden">Recent verification attempts</caption>
+      <thead><tr>
+        <th scope="col">Attempt</th><th scope="col">Identity</th><th scope="col">Score</th>
+        <th scope="col">Outcome</th><th scope="col">Scenario</th>
+      </tr></thead><tbody></tbody></table>
+  </div>
+  <div id="detail" class="panel" aria-live="polite">
+    <p class="muted">Select an attempt to see why it was scored that way.</p>
+  </div>
+</div>
+{% endblock %}

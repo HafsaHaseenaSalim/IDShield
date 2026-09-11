@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block page %}login{% endblock %}
+{% block title %}IDShield &mdash; Sign in{% endblock %}
+{% block content %}
+<h1>Analyst sign in</h1>
+<p class="lede">The analyst console lists risk scores and linked records for every
+applicant, so it sits behind authentication rather than being publicly readable.</p>
+{% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+<form method="post" class="panel narrow">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+  <label>Username<input name="username" value="{{ demo_user }}" required autocomplete="username"></label>
+  <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+  <button class="btn" type="submit">Sign in</button>
+  <p class="muted small">Demo credentials are in the README. Override them with the
+  <code>IDSHIELD_ANALYST_PASSWORD</code> environment variable.</p>
+</form>
+{% endblock %}

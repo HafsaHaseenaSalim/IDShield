@@ -1,0 +1,19 @@
+# IDShield dependencies — versions pinned deliberately.
+# Pinning is part of the "patch management" control (Cyber Essentials #5):
+# reproducible installs, and `pip-audit` can be run against a known set.
+
+Flask==3.0.3
+Werkzeug==3.0.4
+Flask-Limiter==3.8.0
+Flask-WTF==1.2.1
+flask-talisman==1.1.0
+
+Pillow==10.4.0
+ImageHash==4.3.1
+pypdf==4.3.1
+
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.5.1
+joblib==1.4.2
+networkx==3.3

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() if csrf_token is defined else '' }}">
+<title>{% block title %}IDShield{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+{# data-page drives which controller app.js runs. Dispatching from an
+   attribute rather than an inline <script> is what lets the Content-Security
+   -Policy forbid inline script entirely. #}
+<body data-page="{% block page %}home{% endblock %}">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <a class="brand" href="/">IDShield</a>
+  <nav aria-label="Main">
+    <a href="/verify">Verification</a>
+    <a href="/simulator">Simulator</a>
+    <a href="/dashboard">Analyst console</a>
+  </nav>
+</header>
+<main class="container" id="main">
+{% block content %}{% endblock %}
+</main>
+<footer class="foot">Simulated data only. No real identity system is contacted,
+and no real identity documents are used.</footer>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>

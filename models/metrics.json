@@ -1,0 +1,147 @@
+{
+  "n_train": 745,
+  "random_seed": 42,
+  "n_test": 750,
+  "n_total": 1495,
+  "evaluation_seed": 10042,
+  "accuracy": 0.9653333333333334,
+  "fraud_vs_legitimate_auc": 0.9905894648829432,
+  "labels": [
+    "CREDENTIAL_STUFFING",
+    "FORGED_DOCUMENT",
+    "LEGITIMATE",
+    "SYNTHETIC_IDENTITY"
+  ],
+  "confusion_matrix": [
+    [
+      123,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      56,
+      14,
+      0
+    ],
+    [
+      0,
+      10,
+      510,
+      0
+    ],
+    [
+      0,
+      0,
+      2,
+      35
+    ]
+  ],
+  "per_class": {
+    "CREDENTIAL_STUFFING": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 123.0
+    },
+    "FORGED_DOCUMENT": {
+      "precision": 0.8484848484848485,
+      "recall": 0.8,
+      "f1": 0.8235294117647058,
+      "support": 70.0
+    },
+    "LEGITIMATE": {
+      "precision": 0.9695817490494296,
+      "recall": 0.9807692307692307,
+      "f1": 0.9751434034416826,
+      "support": 520.0
+    },
+    "SYNTHETIC_IDENTITY": {
+      "precision": 1.0,
+      "recall": 0.9459459459459459,
+      "f1": 0.9722222222222222,
+      "support": 37.0
+    }
+  },
+  "feature_importances": {
+    "velocity_ip_count": 0.0356765140124228,
+    "velocity_account_spread": 0.04866031168679042,
+    "failed_login_count": 0.004345541794701317,
+    "ip_flagged": 0.007982794808162144,
+    "device_identity_count": 0.08476284799616265,
+    "device_flagged": 0.019191331751464254,
+    "attribute_flags": 0.10012451173062449,
+    "cluster_identity_count": 0.03876780729133313,
+    "cluster_binding_kinds": 0.046450703108584034,
+    "cluster_has_blocked": 0.01116523025698191,
+    "document_reuse_count": 0.08180422654813756,
+    "ela_score": 0.24572823917805106,
+    "metadata_flag": 0.17121234530247872,
+    "liveness_failed": 0.004856667507488396,
+    "credential_failed": 0.0992709270266172
+  },
+  "engine": {
+    "breakdown": [
+      {
+        "scenario": "CREDENTIAL_STUFFING",
+        "decision": "ALLOW",
+        "count": 2
+      },
+      {
+        "scenario": "CREDENTIAL_STUFFING",
+        "decision": "BLOCK",
+        "count": 103
+      },
+      {
+        "scenario": "CREDENTIAL_STUFFING",
+        "decision": "STEP_UP",
+        "count": 18
+      },
+      {
+        "scenario": "FORGED_DOCUMENT",
+        "decision": "ALLOW",
+        "count": 12
+      },
+      {
+        "scenario": "FORGED_DOCUMENT",
+        "decision": "BLOCK",
+        "count": 10
+      },
+      {
+        "scenario": "FORGED_DOCUMENT",
+        "decision": "STEP_UP",
+        "count": 48
+      },
+      {
+        "scenario": "LEGITIMATE",
+        "decision": "ALLOW",
+        "count": 495
+      },
+      {
+        "scenario": "LEGITIMATE",
+        "decision": "BLOCK",
+        "count": 6
+      },
+      {
+        "scenario": "LEGITIMATE",
+        "decision": "STEP_UP",
+        "count": 19
+      },
+      {
+        "scenario": "SYNTHETIC_IDENTITY",
+        "decision": "BLOCK",
+        "count": 31
+      },
+      {
+        "scenario": "SYNTHETIC_IDENTITY",
+        "decision": "STEP_UP",
+        "count": 6
+      }
+    ],
+    "legitimate_block_rate": 0.011538461538461539,
+    "legitimate_step_up_rate": 0.03653846153846154,
+    "attack_detection_rate": 0.9391304347826087
+  },
+  "methodology": "Independent synthetic replay using a different fixed seed, separate documents, identities and reputation/graph state. The existing Random Forest and ELA threshold are frozen before evaluation. Features are computed in arrival order using prior attempts only. Classifier accuracy and engine step-up/block rates are separate measures. This tests the same simulator distribution, not real-world performance."
+}

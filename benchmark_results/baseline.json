@@ -1,0 +1,479 @@
+{
+  "generated_at": "2026-09-11T10:18:23.896675+00:00",
+  "model_trained": true,
+  "note": "Adversarial/unseen-data challenge sets, deliberately different from the simulator's own attack patterns (see adversarial_benchmark.py). These are synthetic demo metrics, not evidence of real-world performance.",
+  "datasets": {
+    "easy": {
+      "rules_plus_ml": {
+        "records": 87,
+        "legitimate_records": 62,
+        "attack_records": 25,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 87,
+          "valid_records": 87,
+          "invalid_records": 0,
+          "labeled_records": 87,
+          "accuracy": 0.8850574712643678,
+          "precision": 0.8260869565217391,
+          "recall": 0.76,
+          "f1": 0.7916666666666667,
+          "roc_auc": 0.9209677419354838,
+          "false_positive_rate": 0.06451612903225806,
+          "false_negative_rate": 0.24,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.06451612903225806,
+          "attack_detection_rate": 0.76,
+          "per_attack_type_detection": {
+            "SYNTHETIC_IDENTITY": 0.375,
+            "CREDENTIAL_STUFFING": 1.0,
+            "DOCUMENT_FRAUD": 0.6666666666666666
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 64,
+            "STEP_UP": 19,
+            "BLOCK": 4
+          },
+          "legitimate": {
+            "ALLOW": 58,
+            "STEP_UP": 4,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 6,
+            "STEP_UP": 15,
+            "BLOCK": 4
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.76,
+          "attack_hard_block_rate": 0.16,
+          "legitimate_friction_rate": 0.06451612903225806,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 4,
+          "campaigns_detected": 3,
+          "campaign_detection_rate": 0.75,
+          "median_events_to_detection": 1,
+          "median_seconds_to_detection": 0.0
+        }
+      },
+      "rules_only": {
+        "records": 87,
+        "legitimate_records": 62,
+        "attack_records": 25,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 87,
+          "valid_records": 87,
+          "invalid_records": 0,
+          "labeled_records": 87,
+          "accuracy": 0.8275862068965517,
+          "precision": 1.0,
+          "recall": 0.4,
+          "f1": 0.5714285714285715,
+          "roc_auc": 0.9470967741935483,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.6,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.0,
+          "attack_detection_rate": 0.4,
+          "per_attack_type_detection": {
+            "SYNTHETIC_IDENTITY": 0.125,
+            "CREDENTIAL_STUFFING": 0.6428571428571429,
+            "DOCUMENT_FRAUD": 0.0
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 77,
+            "STEP_UP": 6,
+            "BLOCK": 4
+          },
+          "legitimate": {
+            "ALLOW": 62,
+            "STEP_UP": 0,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 15,
+            "STEP_UP": 6,
+            "BLOCK": 4
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.4,
+          "attack_hard_block_rate": 0.16,
+          "legitimate_friction_rate": 0.0,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 4,
+          "campaigns_detected": 2,
+          "campaign_detection_rate": 0.5,
+          "median_events_to_detection": 4.5,
+          "median_seconds_to_detection": 2768.0
+        }
+      }
+    },
+    "medium": {
+      "rules_plus_ml": {
+        "records": 137,
+        "legitimate_records": 65,
+        "attack_records": 72,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 137,
+          "valid_records": 137,
+          "invalid_records": 0,
+          "labeled_records": 137,
+          "accuracy": 0.8321167883211679,
+          "precision": 0.9152542372881356,
+          "recall": 0.75,
+          "f1": 0.8244274809160305,
+          "roc_auc": 0.9214743589743588,
+          "false_positive_rate": 0.07692307692307693,
+          "false_negative_rate": 0.25,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.07692307692307693,
+          "attack_detection_rate": 0.75,
+          "per_attack_type_detection": {
+            "CREDENTIAL_STUFFING": 0.9607843137254902,
+            "SYNTHETIC_IDENTITY": 0.125,
+            "DOCUMENT_FRAUD": 0.6
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 78,
+            "STEP_UP": 49,
+            "BLOCK": 10
+          },
+          "legitimate": {
+            "ALLOW": 60,
+            "STEP_UP": 5,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 18,
+            "STEP_UP": 44,
+            "BLOCK": 10
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.75,
+          "attack_hard_block_rate": 0.1388888888888889,
+          "legitimate_friction_rate": 0.07692307692307693,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 8,
+          "campaigns_detected": 5,
+          "campaign_detection_rate": 0.625,
+          "median_events_to_detection": 1,
+          "median_seconds_to_detection": 0.0
+        }
+      },
+      "rules_only": {
+        "records": 137,
+        "legitimate_records": 65,
+        "attack_records": 72,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 137,
+          "valid_records": 137,
+          "invalid_records": 0,
+          "labeled_records": 137,
+          "accuracy": 0.6204379562043796,
+          "precision": 1.0,
+          "recall": 0.2777777777777778,
+          "f1": 0.4347826086956522,
+          "roc_auc": 0.913568376068376,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7222222222222222,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.0,
+          "attack_detection_rate": 0.2777777777777778,
+          "per_attack_type_detection": {
+            "CREDENTIAL_STUFFING": 0.39215686274509803,
+            "SYNTHETIC_IDENTITY": 0.0,
+            "DOCUMENT_FRAUD": 0.0
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 117,
+            "STEP_UP": 10,
+            "BLOCK": 10
+          },
+          "legitimate": {
+            "ALLOW": 65,
+            "STEP_UP": 0,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 52,
+            "STEP_UP": 10,
+            "BLOCK": 10
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.2777777777777778,
+          "attack_hard_block_rate": 0.1388888888888889,
+          "legitimate_friction_rate": 0.0,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 8,
+          "campaigns_detected": 2,
+          "campaign_detection_rate": 0.25,
+          "median_events_to_detection": 6.0,
+          "median_seconds_to_detection": 19.0
+        }
+      }
+    },
+    "hard": {
+      "rules_plus_ml": {
+        "records": 220,
+        "legitimate_records": 74,
+        "attack_records": 146,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 220,
+          "valid_records": 220,
+          "invalid_records": 0,
+          "labeled_records": 220,
+          "accuracy": 0.8227272727272728,
+          "precision": 0.928,
+          "recall": 0.7945205479452054,
+          "f1": 0.8560885608856088,
+          "roc_auc": 0.88064605701592,
+          "false_positive_rate": 0.12162162162162163,
+          "false_negative_rate": 0.2054794520547945,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.12162162162162163,
+          "attack_detection_rate": 0.7945205479452054,
+          "per_attack_type_detection": {
+            "CREDENTIAL_STUFFING": 0.9473684210526315,
+            "SYNTHETIC_IDENTITY": 0.12,
+            "DOCUMENT_FRAUD": 0.7142857142857143
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 95,
+            "STEP_UP": 113,
+            "BLOCK": 12
+          },
+          "legitimate": {
+            "ALLOW": 65,
+            "STEP_UP": 9,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 30,
+            "STEP_UP": 104,
+            "BLOCK": 12
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.7945205479452054,
+          "attack_hard_block_rate": 0.0821917808219178,
+          "legitimate_friction_rate": 0.12162162162162163,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 13,
+          "campaigns_detected": 9,
+          "campaign_detection_rate": 0.6923076923076923,
+          "median_events_to_detection": 1,
+          "median_seconds_to_detection": 0.0
+        }
+      },
+      "rules_only": {
+        "records": 220,
+        "legitimate_records": 74,
+        "attack_records": 146,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 220,
+          "valid_records": 220,
+          "invalid_records": 0,
+          "labeled_records": 220,
+          "accuracy": 0.4409090909090909,
+          "precision": 1.0,
+          "recall": 0.15753424657534246,
+          "f1": 0.27218934911242604,
+          "roc_auc": 0.8842558311736394,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.8424657534246576,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.0,
+          "attack_detection_rate": 0.15753424657534246,
+          "per_attack_type_detection": {
+            "CREDENTIAL_STUFFING": 0.20175438596491227,
+            "SYNTHETIC_IDENTITY": 0.0,
+            "DOCUMENT_FRAUD": 0.0
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 197,
+            "STEP_UP": 11,
+            "BLOCK": 12
+          },
+          "legitimate": {
+            "ALLOW": 74,
+            "STEP_UP": 0,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 123,
+            "STEP_UP": 11,
+            "BLOCK": 12
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.15753424657534246,
+          "attack_hard_block_rate": 0.0821917808219178,
+          "legitimate_friction_rate": 0.0,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 13,
+          "campaigns_detected": 3,
+          "campaign_detection_rate": 0.23076923076923078,
+          "median_events_to_detection": 6,
+          "median_seconds_to_detection": 18.0
+        }
+      }
+    },
+    "labeled": {
+      "rules_plus_ml": {
+        "records": 444,
+        "legitimate_records": 201,
+        "attack_records": 243,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 444,
+          "valid_records": 444,
+          "invalid_records": 0,
+          "labeled_records": 444,
+          "accuracy": 0.8378378378378378,
+          "precision": 0.9130434782608695,
+          "recall": 0.7777777777777778,
+          "f1": 0.84,
+          "roc_auc": 0.9066703519439837,
+          "false_positive_rate": 0.08955223880597014,
+          "false_negative_rate": 0.2222222222222222,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.08955223880597014,
+          "attack_detection_rate": 0.7777777777777778,
+          "per_attack_type_detection": {
+            "SYNTHETIC_IDENTITY": 0.16326530612244897,
+            "CREDENTIAL_STUFFING": 0.9553072625698324,
+            "DOCUMENT_FRAUD": 0.6666666666666666
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 237,
+            "STEP_UP": 181,
+            "BLOCK": 26
+          },
+          "legitimate": {
+            "ALLOW": 183,
+            "STEP_UP": 18,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 54,
+            "STEP_UP": 163,
+            "BLOCK": 26
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.7777777777777778,
+          "attack_hard_block_rate": 0.10699588477366255,
+          "legitimate_friction_rate": 0.08955223880597014,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 25,
+          "campaigns_detected": 17,
+          "campaign_detection_rate": 0.68,
+          "median_events_to_detection": 1,
+          "median_seconds_to_detection": 0.0
+        }
+      },
+      "rules_only": {
+        "records": 444,
+        "legitimate_records": 201,
+        "attack_records": 243,
+        "invalid_records": 0,
+        "row_metrics": {
+          "records": 444,
+          "valid_records": 444,
+          "invalid_records": 0,
+          "labeled_records": 444,
+          "accuracy": 0.5765765765765766,
+          "precision": 1.0,
+          "recall": 0.22633744855967078,
+          "f1": 0.3691275167785235,
+          "roc_auc": 0.8955530987040108,
+          "false_positive_rate": 0.0,
+          "false_negative_rate": 0.7736625514403292,
+          "legitimate_block_rate": 0.0,
+          "legitimate_step_up_rate": 0.0,
+          "attack_detection_rate": 0.22633744855967078,
+          "per_attack_type_detection": {
+            "SYNTHETIC_IDENTITY": 0.02040816326530612,
+            "CREDENTIAL_STUFFING": 0.3016759776536313,
+            "DOCUMENT_FRAUD": 0.0
+          },
+          "note": "Computed from ground-truth labels supplied in the input dataset; labels were never passed to FraudEngine. These figures describe THIS dataset only and are not evidence of production performance."
+        },
+        "decision_breakdown": {
+          "overall": {
+            "ALLOW": 389,
+            "STEP_UP": 29,
+            "BLOCK": 26
+          },
+          "legitimate": {
+            "ALLOW": 201,
+            "STEP_UP": 0,
+            "BLOCK": 0
+          },
+          "attack": {
+            "ALLOW": 188,
+            "STEP_UP": 29,
+            "BLOCK": 26
+          }
+        },
+        "decision_quality": {
+          "attack_detection_rate": 0.22633744855967078,
+          "attack_hard_block_rate": 0.10699588477366255,
+          "legitimate_friction_rate": 0.0,
+          "legitimate_harm_rate": 0.0
+        },
+        "campaign_metrics": {
+          "campaigns_total": 25,
+          "campaigns_detected": 9,
+          "campaign_detection_rate": 0.36,
+          "median_events_to_detection": 6,
+          "median_seconds_to_detection": 20.0
+        }
+      }
+    }
+  }
+}

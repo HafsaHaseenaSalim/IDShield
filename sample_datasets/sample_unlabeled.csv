@@ -1,0 +1,18 @@
+user_id,time,ip,device,phone,email,full_name,address,nationality,success,document_anomaly
+CIT-001,2026-09-01T09:00:00Z,203.0.113.10,DEV-A1,+971501111111,amal@example.com,Amal Yousef,1 Palm St,UAE,true,
+CIT-002,2026-09-01T09:05:00Z,203.0.113.11,DEV-A2,+971502222222,sara@example.com,Sara Ali,2 Palm St,UAE,true,3.1
+CIT-003,2026-09-01T09:10:00Z,203.0.113.12,DEV-A3,+971503333333,omar@example.com,Omar Said,3 Palm St,UAE,true,2.0
+ACC-100,2026-09-01T10:00:00Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-101,2026-09-01T10:00:05Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-102,2026-09-01T10:00:10Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-103,2026-09-01T10:00:15Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-104,2026-09-01T10:00:20Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-105,2026-09-01T10:00:25Z,198.51.100.20,DEV-BOT,,,,,,false,
+ACC-106,2026-09-01T10:00:30Z,198.51.100.20,DEV-BOT,,,,,,true,
+RING-01,2026-09-01T11:00:00Z,203.0.113.50,DEV-RING,+971509999999,ring1@example.com,Ring One,10 Ring Rd,UAE,true,
+RING-02,2026-09-01T11:01:00Z,203.0.113.51,DEV-RING,+971509999999,ring2@example.com,Ring Two,11 Ring Rd,UAE,true,
+RING-03,2026-09-01T11:02:00Z,203.0.113.52,DEV-RING,+971509999999,ring3@example.com,Ring Three,12 Ring Rd,UAE,true,
+RING-04,2026-09-01T11:03:00Z,203.0.113.53,DEV-RING,+971509999999,ring4@example.com,Ring Four,13 Ring Rd,UAE,true,
+DOC-01,2026-09-01T12:00:00Z,203.0.113.60,DEV-D1,+971504444444,doc1@example.com,Doc One,20 Doc Ave,UAE,true,24.5
+CIT-020,2026-09-01T13:00:00Z,,,,cit20@example.com,,,,,
+,2026-09-01T14:00:00Z,203.0.113.70,DEV-X,,noone@example.com,,,,true,

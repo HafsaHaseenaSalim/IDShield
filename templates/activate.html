@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block page %}customer-activate{% endblock %}
+{% block title %}IDShield &mdash; Activate Your Account{% endblock %}
+{% block content %}
+{% if expired %}
+<h1>Activation link expired</h1>
+<p class="lede">This activation is no longer valid — it may have expired, already been
+used, or does not belong to this browser session. Start identity verification again to
+activate a new account.</p>
+<a class="btn" href="{{ url_for('verify') }}">Start Identity Verification</a>
+{% else %}
+<h1>Identity verified</h1>
+<p class="lede">Activate your Digital ID account</p>
+{% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+<form method="post" class="panel narrow">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+  <label>Email / Digital ID
+    <input name="identifier" required autocomplete="username" maxlength="254"></label>
+  <label>Password
+    <input type="password" name="password" required autocomplete="new-password" maxlength="256"></label>
+  <label>Confirm Password
+    <input type="password" name="confirm_password" required autocomplete="new-password" maxlength="256"></label>
+  <button class="btn" type="submit">Activate Account</button>
+  <p class="muted small">Authentication attempts are monitored for unusual activity.</p>
+</form>
+{% endif %}
+{% endblock %}

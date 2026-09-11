@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block page %}employee-login{% endblock %}
+{% block title %}IDShield &mdash; Analyst Access{% endblock %}
+{% block content %}
+<h1>IDShield Analyst Access</h1>
+<p class="lede">Authorized personnel only. Access fraud investigations, identity-link
+intelligence, and risk decisions.</p>
+{% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+<form method="post" class="panel narrow">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+  <label>Employee email or Employee ID
+    <input name="identifier" value="{{ demo_user }}" required autocomplete="username"></label>
+  <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+  <button class="btn" type="submit">Sign In to Analyst Console</button>
+  <p class="muted small">Access attempts are logged and monitored.</p>
+</form>
+{% endblock %}

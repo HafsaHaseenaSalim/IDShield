@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+
+# Pytest / temp
+.pytest_cache/
+test_temp/
+.coverage
+htmlcov/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Runtime database
+database/*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded / temporary identity documents
+uploads/
+temp/
+tmp/
+
+# Evaluator runtime output
+final_eval/
+eval_output/
+
+# Logs
+*.log
+
+# Build/cache
+dist/
+build/
+*.egg-info/
