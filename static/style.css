@@ -116,9 +116,15 @@ body {
   font-weight: 800; font-size: 19px; color: var(--text-light);
   text-decoration: none; letter-spacing: .3px;
 }
-.brand::before {
-  content: ""; display: inline-block; width: 7px; height: 7px;
-  border-radius: 50%; background: var(--accent-gold); margin-right: 9px;
+.brand-mark {
+  width: 25px; height: 29px; margin-right: 9px; overflow: visible;
+}
+.brand-mark path:first-child {
+  fill: rgba(95, 129, 144, .2); stroke: var(--brand-primary); stroke-width: 2;
+}
+.brand-mark .brand-check {
+  fill: none; stroke: var(--accent-gold); stroke-width: 2.5;
+  stroke-linecap: round; stroke-linejoin: round;
 }
 .topbar nav { display: flex; gap: 28px; }
 .topbar a { color: var(--text-muted-light); text-decoration: none; font-weight: 500; transition: color .15s var(--ease); }
@@ -362,6 +368,57 @@ body[data-page="login"] .btn:not(.ghost):hover {
 
 /* ------------------------------------------------------------- home page */
 
+body[data-page="home"] .container { margin-top: 0; }
+body[data-page="home"] .topbar { animation: page-in .7s var(--ease) both; }
+body.page-leaving .topbar, body.page-leaving main {
+  opacity: 0; transform: translateY(8px); transition: opacity .18s var(--ease), transform .18s var(--ease);
+}
+
+.home-hero {
+  min-height: 580px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+  align-items: center; gap: 42px; padding: 66px 0 48px;
+}
+.hero-copy { animation: rise-in .8s .12s var(--ease) both; }
+.eyebrow {
+  display: flex; align-items: center; gap: 9px; color: var(--accent-gold);
+  font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 20px;
+}
+.eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-gold); box-shadow: 0 0 0 5px rgba(198, 149, 82, .12); }
+.home-hero h1 { font-size: clamp(42px, 5.2vw, 72px); line-height: 1.02; letter-spacing: -.045em; margin-bottom: 24px; }
+.home-hero h1 em { color: var(--brand-primary); font-style: normal; }
+.home-hero .lede { max-width: 54ch; font-size: 16px; line-height: 1.75; margin-bottom: 28px; }
+.hero-actions { gap: 12px; }
+.hero-actions .btn { padding: 15px 21px; }
+.hero-actions .btn span, .portal-strip .btn span { margin-left: 7px; font-size: 18px; }
+.hero-note { color: var(--text-muted); font-size: 12px; margin: 19px 0 0; }
+.hero-note span { color: var(--allow); font-weight: 800; margin-right: 5px; }
+.hero-visual { min-height: 420px; position: relative; display: grid; place-items: center; animation: rise-in .9s .28s var(--ease) both; }
+.shield-emblem { position: relative; z-index: 1; width: 220px; color: var(--text-light); text-align: center; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); }
+.shield-emblem svg { display: block; width: 100%; height: auto; }
+.shield-emblem svg > path:first-child { fill: rgba(95, 129, 144, .16); stroke: var(--brand-primary); stroke-width: 2.3; }
+.shield-check { fill: none; stroke: var(--accent-gold); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.shield-emblem span { display: block; color: var(--accent-gold); font-size: 10px; font-weight: 800; letter-spacing: .18em; line-height: 1.6; margin-top: -30px; }
+.orbit { position: absolute; border: 1px solid rgba(95, 129, 144, .35); border-radius: 50%; transform: rotate(-28deg); }
+.orbit-one { width: 320px; height: 150px; animation: orbit-drift 8s ease-in-out infinite; }
+.orbit-two { width: 390px; height: 205px; transform: rotate(32deg); border-color: rgba(198, 149, 82, .24); animation: orbit-drift 10s 1s ease-in-out infinite reverse; }
+.signal { position: absolute; z-index: 2; padding: 7px 10px; border: 1px solid var(--border-dark); background: rgba(22, 35, 45, .9); color: var(--text-muted); font-size: 10px; letter-spacing: .12em; }
+.signal-one { top: 19%; right: 3%; }
+.signal-two { bottom: 18%; left: 3%; color: var(--accent-gold); }
+.home-trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); margin: 0 0 66px; }
+.home-trust > div { padding: 24px 25px 25px 0; }
+.home-trust > div + div { padding-left: 25px; border-left: 1px solid var(--border-dark); }
+.home-trust strong { display: block; color: var(--accent-gold); font-size: 11px; letter-spacing: .12em; margin-bottom: 14px; }
+.home-trust span { display: block; color: var(--text-light); font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.home-trust p { color: var(--text-muted); font-size: 13px; margin: 0; }
+.portal-strip { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 34px; border: 1px solid var(--border-dark); background: linear-gradient(105deg, rgba(36, 62, 74, .82), rgba(22, 35, 45, .45)); margin-bottom: 64px; }
+.portal-strip .eyebrow { margin-bottom: 8px; }
+.portal-strip h2 { margin: 0; font-size: 25px; }
+.section-heading { margin-top: 0; }
+
+@keyframes page-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes orbit-drift { 50% { transform: rotate(-22deg) scale(1.03); } }
+
 .pipeline {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 14px; margin: 18px 0;
@@ -540,6 +597,13 @@ tbody tr.selected { background: rgba(95, 129, 144, .16); box-shadow: inset 3px 0
   .topbar { flex-wrap: wrap; gap: 12px; padding: 14px 18px; }
   .stats { grid-template-columns: 1fr; }
   h1 { font-size: 27px; }
+  .home-hero { grid-template-columns: 1fr; gap: 12px; padding-top: 48px; }
+  .home-hero h1 { font-size: 43px; }
+  .hero-visual { min-height: 330px; transform: scale(.82); margin: -18px 0 -20px; }
+  .home-trust { grid-template-columns: 1fr; }
+  .home-trust > div, .home-trust > div + div { padding: 18px 0; border-left: 0; }
+  .home-trust > div + div { border-top: 1px solid var(--border-dark); }
+  .portal-strip { align-items: flex-start; flex-direction: column; padding: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

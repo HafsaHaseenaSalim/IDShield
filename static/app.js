@@ -1142,6 +1142,16 @@ function initDashboard() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const page = document.body.dataset.page;
+  document.querySelectorAll('a[href^="/"]').forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      if (event.defaultPrevented || link.target === "_blank" || link.origin !== window.location.origin
+          || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey
+          || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      event.preventDefault();
+      document.body.classList.add("page-leaving");
+      window.setTimeout(function () { window.location.href = link.href; }, 180);
+    });
+  });
   if (page === "verify") initVerify();
   else if (page === "simulator") initSimulator();
   else if (page === "dashboard") initDashboard();

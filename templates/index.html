@@ -2,29 +2,44 @@
 {% block page %}home{% endblock %}
 {% block title %}IDShield &mdash; Digital Identity{% endblock %}
 {% block content %}
-<h1>Your digital identity, securely yours</h1>
-<p class="lede">Create your Digital ID with a quick identity check, then sign in to
-manage your profile.</p>
-
-<div class="cards">
-  <div class="card">
-    <h3>Citizen Portal</h3>
-    <p>New here? Verify your identity to create an account.</p>
-    <div class="actions">
-      <a class="btn" href="{{ url_for('verify') }}">Sign Up</a>
-      <a class="btn ghost" href="{{ url_for('customer_login') }}">Sign In</a>
+<section class="home-hero" aria-labelledby="home-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-dot"></span>Trusted identity, built for real life</p>
+    <h1 id="home-title">Your digital identity,<br><em>securely yours.</em></h1>
+    <p class="lede">Create your Digital ID with a quick identity check, then sign in to manage your profile. IDShield keeps every decision explainable, evidence-led, and human-readable.</p>
+    <div class="actions hero-actions">
+      <a class="btn" href="{{ url_for('verify') }}">Create your Digital ID <span aria-hidden="true">&rarr;</span></a>
+      <a class="btn ghost" href="{{ url_for('customer_login') }}">Sign in</a>
     </div>
+    <p class="hero-note"><span aria-hidden="true">&#10003;</span> Your information is checked securely and never shared without your consent.</p>
   </div>
-  <div class="card">
-    <h3>Employee Portal</h3>
-    <p>Authorized fraud analysts and security personnel.</p>
-    <div class="actions">
-      <a class="btn" href="{{ url_for('analyst_login') }}">Analyst Sign In</a>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="orbit orbit-one"></div>
+    <div class="orbit orbit-two"></div>
+    <div class="shield-emblem">
+      <svg viewBox="0 0 120 136" focusable="false">
+        <path d="M60 4 108 22v34c0 30.7-19.1 54-48 70C31.1 110 12 86.7 12 56V22L60 4Z"></path>
+        <path class="shield-check" d="m34 66 17 17 36-38"></path>
+      </svg>
+      <span>IDENTITY<br>VERIFIED</span>
     </div>
+    <span class="signal signal-one">ENCRYPTED</span>
+    <span class="signal signal-two">LIVE CHECK</span>
   </div>
-</div>
+</section>
 
-<h2>How an attempt is scored</h2>
+<section class="home-trust" aria-label="IDShield capabilities">
+  <div><strong>01</strong><span>Identity first</span><p>One secure place for your digital credentials.</p></div>
+  <div><strong>02</strong><span>Signals, not guesses</span><p>Document, liveness, and context checks work together.</p></div>
+  <div><strong>03</strong><span>Decisions you can see</span><p>Every result comes with a clear reason chain.</p></div>
+</section>
+
+<section class="portal-strip">
+  <div><p class="eyebrow">For security teams</p><h2>See the signal behind every decision.</h2></div>
+  <a class="btn ghost" href="{{ url_for('analyst_login') }}">Open analyst console <span aria-hidden="true">&rarr;</span></a>
+</section>
+
+<h2 class="section-heading">How an attempt is scored</h2>
 <div class="pipeline">
   <div class="stage-card"><span>1</span><h4>Verification API</h4>
     <p>Document, liveness and credential checks.</p></div>

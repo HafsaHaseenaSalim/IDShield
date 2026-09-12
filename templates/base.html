@@ -13,11 +13,19 @@
 <body data-page="{% block page %}home{% endblock %}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
-  <a class="brand" href="/">IDShield</a>
+  <a class="brand" href="/" aria-label="IDShield home">
+    <svg class="brand-mark" viewBox="0 0 32 36" aria-hidden="true" focusable="false">
+      <path d="M16 2 29 7v9c0 8.3-5.2 14.6-13 18C8.2 30.6 3 24.3 3 16V7l13-5Z"></path>
+      <path class="brand-check" d="m9.5 17 4.2 4.2 8.8-9"></path>
+    </svg>
+    <span>IDShield</span>
+  </a>
   <nav aria-label="Main">
     <a href="/verify">Verification</a>
-    <a href="/simulator">Simulator</a>
-    <a href="/dashboard">Analyst console</a>
+    {% if session.get('role') == 'employee' and session.get('analyst_authenticated') %}
+      <a href="/simulator">Simulator</a>
+      <a href="/dashboard">Analyst console</a>
+    {% endif %}
   </nav>
 </header>
 <main class="container" id="main">
